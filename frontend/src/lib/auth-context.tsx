@@ -22,10 +22,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
 
   const refresh = useCallback(async () => {
+    // Skip the /auth/me probe when there's no stored session — avoids a noisy
+    // 401 in the console on every visit to the login page.
+    const hasToken = typeof window !== 'undefined' && localStorage.getItem('ems_token');
+    if (!hasToken) {
+      setUser(null);
+      setLoading(false);
+      return;
+    }
     try {
       const { data } = await api.get('/auth/me');
       setUser(data.user);
     } catch {
+      if (typeof window !== 'undefined') localStorage.removeItem('ems_token');
       setUser(null);
     } finally {
       setLoading(false);
