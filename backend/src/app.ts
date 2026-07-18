@@ -14,9 +14,20 @@ export function createApp(): Application {
   app.use(
     cors({
       origin(origin, callback) {
-        // Allow non-browser clients (no Origin) and any configured frontend origin.
-        // Vercel preview URLs (*.vercel.app) are allowed so preview deploys work too.
-        if (!origin || env.clientUrls.includes(origin) || /\.vercel\.app$/.test(new URL(origin).hostname)) {
+        // Allow non-browser clients (no Origin header).
+        if (!origin) return callback(null, true);
+
+        let hostname: string;
+        try {
+          hostname = new URL(origin).hostname;
+        } catch {
+          return callback(new Error(`Invalid origin: ${origin}`));
+        }
+
+        // Allow any localhost / 127.0.0.1 port (dev servers drift to 3001, 3002…),
+        // any configured frontend origin, and any Vercel deploy (*.vercel.app).
+        const isLocalhost = hostname === 'localhost' || hostname === '127.0.0.1';
+        if (isLocalhost || env.clientUrls.includes(origin) || /\.vercel\.app$/.test(hostname)) {
           return callback(null, true);
         }
         return callback(new Error(`Origin ${origin} not allowed by CORS`));
