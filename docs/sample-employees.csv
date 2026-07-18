@@ -1,0 +1,6 @@
+name,email,phone,department,designation,salary,joiningDate,status,role,password
+Priya Sharma,priya.sharma@ems.com,+1 555 3001,Engineering,Backend Engineer,95000,2023-02-15,active,employee,Password@123
+Marcus Lee,marcus.lee@ems.com,+1 555 3002,Sales,Account Executive,72000,2022-11-01,active,employee,Password@123
+Elena Ortiz,elena.ortiz@ems.com,+1 555 3003,Marketing,Content Strategist,68000,2023-06-20,inactive,employee,Password@123
+David Kim,david.kim@ems.com,+1 555 3004,Finance,Financial Analyst,81000,2021-09-10,active,employee,Password@123
+Aisha Khan,aisha.khan@ems.com,+1 555 3005,Human Resources,Recruiter,64000,2023-01-05,active,hr,Password@123

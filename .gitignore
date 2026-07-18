@@ -1,0 +1,17 @@
+# dependencies
+**/node_modules/
+
+# builds
+backend/dist/
+frontend/.next/
+frontend/out/
+
+# env
+**/.env
+**/.env.local
+
+# misc
+**/*.log
+**/coverage/
+backend/uploads/
+.DS_Store

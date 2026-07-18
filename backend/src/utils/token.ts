@@ -1,0 +1,15 @@
+import jwt, { SignOptions } from 'jsonwebtoken';
+import { env } from '../config/env';
+import { JwtPayload } from '../types';
+
+export function signToken(payload: JwtPayload): string {
+  return jwt.sign(payload, env.jwtSecret, {
+    expiresIn: env.jwtExpiresIn,
+  } as SignOptions);
+}
+
+export function verifyToken(token: string): JwtPayload {
+  return jwt.verify(token, env.jwtSecret) as JwtPayload;
+}
+
+export const COOKIE_NAME = 'ems_token';

@@ -1,0 +1,51 @@
+services:
+  mongo:
+    image: mongo:7
+    container_name: ems-mongo
+    restart: unless-stopped
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ['CMD', 'mongosh', '--eval', "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: ./backend
+    container_name: ems-backend
+    restart: unless-stopped
+    depends_on:
+      mongo:
+        condition: service_healthy
+    environment:
+      PORT: 5000
+      NODE_ENV: production
+      MONGO_URI: mongodb://mongo:27017/ems
+      JWT_SECRET: change_this_in_prod_please_use_long_secret
+      JWT_EXPIRES_IN: 1d
+      COOKIE_SECURE: 'false'
+      CLIENT_URL: http://localhost:3000
+      SEED_ADMIN_EMAIL: admin@ems.com
+      SEED_ADMIN_PASSWORD: Admin@123
+      SEED_ADMIN_NAME: Super Admin
+    ports:
+      - '5000:5000'
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:5000/api
+        NEXT_PUBLIC_UPLOADS_URL: http://localhost:5000
+    container_name: ems-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - '3000:3000'
+
+volumes:
+  mongo_data:

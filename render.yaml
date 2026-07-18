@@ -1,0 +1,39 @@
+# Render blueprint for the EMS backend API.
+# In Render: New + → Blueprint → connect this repo. It reads this file.
+# MongoDB is NOT hosted here — create a free MongoDB Atlas cluster and paste its
+# connection string into the MONGO_URI environment variable (marked sync:false).
+services:
+  - type: web
+    name: ems-backend
+    runtime: node
+    rootDir: backend
+    plan: free
+    # --include=dev ensures TypeScript + @types are installed for the build even
+    # though NODE_ENV=production, then we compile to dist/.
+    buildCommand: npm install --include=dev && npm run build
+    startCommand: node dist/server.js
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: JWT_EXPIRES_IN
+        value: 1d
+      - key: COOKIE_SECURE
+        value: 'true'
+      - key: SEED_ON_START
+        value: 'true'
+      - key: JWT_SECRET
+        generateValue: true # Render generates a strong random secret
+      - key: MONGO_URI
+        sync: false # paste your MongoDB Atlas connection string in the dashboard
+      - key: CLIENT_URL
+        sync: false # your Vercel URL, e.g. https://ems-yourname.vercel.app
+      - key: SEED_ADMIN_EMAIL
+        value: admin@ems.com
+      - key: SEED_ADMIN_PASSWORD
+        value: Admin@123
+      - key: SEED_ADMIN_NAME
+        value: Super Admin
