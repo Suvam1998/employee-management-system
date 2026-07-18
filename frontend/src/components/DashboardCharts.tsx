@@ -29,7 +29,14 @@ export function DepartmentBarChart({ data }: { data: Stats['byDepartment'] }) {
           <Tooltip
             contentStyle={{ borderRadius: 8, border: 'none', background: '#1e293b', color: '#fff', fontSize: 12 }}
           />
-          <Bar dataKey="count" radius={[4, 4, 0, 0]}>
+          <Bar
+            dataKey="count"
+            radius={[4, 4, 0, 0]}
+            isAnimationActive
+            animationBegin={150}
+            animationDuration={1100}
+            animationEasing="ease-out"
+          >
             {data.map((_, i) => (
               <Cell key={i} fill={COLORS[i % COLORS.length]} />
             ))}
@@ -47,7 +54,19 @@ export function RolePieChart({ data }: { data: Stats['byRole'] }) {
       <h3 className="mb-4 font-semibold">Employees by Role</h3>
       <ResponsiveContainer width="100%" height={280}>
         <PieChart>
-          <Pie data={chartData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={90} label>
+          <Pie
+            data={chartData}
+            dataKey="value"
+            nameKey="name"
+            cx="50%"
+            cy="50%"
+            outerRadius={90}
+            label
+            isAnimationActive
+            animationBegin={150}
+            animationDuration={1100}
+            animationEasing="ease-out"
+          >
             {chartData.map((_, i) => (
               <Cell key={i} fill={COLORS[i % COLORS.length]} />
             ))}
